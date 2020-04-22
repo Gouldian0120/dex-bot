@@ -1,6 +1,7 @@
 package org.erachain.dextrader.Raters;
 // 30/03 ++
 
+import org.erachain.dextrader.Raters.Rater;
 import org.erachain.dextrader.traders.TradersManager;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 public class RaterLiveCoinRUR extends Rater {
 
     public RaterLiveCoinRUR(TradersManager tradersManager, int sleepSec) {
-        super(tradersManager, "livecoin", sleepSec, null);
+        super(tradersManager, "livecoin", sleepSec);
 
         this.apiURL = "https://api.livecoin.net/exchange/ticker?currencyPair=BTC/RUR";
 

@@ -27,6 +27,10 @@ public class TradersManager {
 
     Controller cnt;
 
+    // for tests
+    public TradersManager() {
+    }
+
     public TradersManager(Controller cnt) {
         this.cnt = cnt;
         this.knownRaters = new ArrayList<Rater>();
@@ -76,16 +80,16 @@ public class TradersManager {
             } catch (Exception e) {
             }
         }
-        if (false) {
-            //START RATERs THREADs
-            RaterCoinMarketCapCom raterMarcetCap = new RaterCoinMarketCapCom(this, 300);
-            this.knownRaters.add(raterMarcetCap);
+
+        if (true) {
+            RaterBitforexCom raterBitforexCom = new RaterBitforexCom(this, 300);
+            this.knownRaters.add(raterBitforexCom);
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
             }
-        }
 
+        }
 
         if (true) {
             RaterLiveCoin raterLiveCoin = new RaterLiveCoin(this, 300);
@@ -109,12 +113,30 @@ public class TradersManager {
         if (true) {
             RaterPolonex raterPolonex = new RaterPolonex(this, 300);
             this.knownRaters.add(raterPolonex);
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
         }
 
         if (true) {
             RaterCross raterCross_ETH_RUB = new RaterCross(this, 300, "ETH_RUB",
                     new String[]{"14.12 polonex", "12.92 livecoin"});
             this.knownRaters.add(raterCross_ETH_RUB);
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+        }
+
+        if (true) {
+            //START RATERs THREADs
+            RaterMetalsAPI raterMetalsAPI = new RaterMetalsAPI(this, 60 * 60 * 24);
+            this.knownRaters.add(raterMetalsAPI);
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
         }
 
         //if (true) return;
@@ -164,6 +186,10 @@ public class TradersManager {
             return assets.get(key);
         }
 
+        if (cnt == null || cnt.apiClient == null) {
+            return null;
+        }
+
         // IF that TRANSACTION exist in CHAIN or queue
         String result = cnt.apiClient.executeCommand("GET assets/" + key);
         try {
@@ -175,7 +201,8 @@ public class TradersManager {
 
         } catch (NullPointerException | ClassCastException e) {
             //JSON EXCEPTION
-            LOGGER.error(e.getMessage(), e);
+            ///LOGGER.error(e.getMessage(), e);
+            LOGGER.error("For Asset[" + key + "] :" + result);
             return null;
         }
     }
