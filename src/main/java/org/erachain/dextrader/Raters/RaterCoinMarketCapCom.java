@@ -1,5 +1,5 @@
 package org.erachain.dextrader.Raters;
-// 30/03 ++
+
 
 import org.erachain.dextrader.traders.TradersManager;
 import org.json.simple.JSONObject;
@@ -8,19 +8,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /// result   "last":9577.769,"buy":9577.769,"sell":9509.466
-public class RaterWEX extends Rater {
+public class RaterCoinMarketCapCom extends Rater {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RaterWEX.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RaterCoinMarketCapCom.class);
 
-    public RaterWEX(TradersManager tradersManager, int sleepSec) {
-        super(tradersManager, "wex", sleepSec, null);
+    private static Map<String, String> headers;
+    {
+        headers = new HashMap<>();
+        headers.put("Accept","application/json");
+        headers.put("X-CMC_PRO_API_KEY","b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c");
+    }
 
-        this.apiURL = "https://wex.nz/api/3/ticker/btc_rur-btc_usd-usd_rur";
+    public RaterCoinMarketCapCom(TradersManager tradersManager, int sleepSec) {
+        super(tradersManager, "coinMarketCap", sleepSec, headers);
+
+        this.apiURL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
 
     }
+
 
     private BigDecimal calcPrice(BigDecimal rateBuy, BigDecimal rateSell, BigDecimal rateLast) {
         try {
@@ -34,11 +44,9 @@ public class RaterWEX extends Rater {
 
     public void clearRates() {
         if (cnt.DEVELOP_USE) {
-            rates.remove(makeKey(1105L, 1106L, this.courseName));
+            rates.remove(makeKey(1106L, 1105L, this.courseName));
         } else {
             rates.remove(makeKey(12L, 95L, this.courseName));
-            rates.remove(makeKey(12L, 92L, this.courseName));
-            rates.remove(makeKey(92L, 92L, this.courseName));
         }
     }
 
@@ -80,7 +88,7 @@ public class RaterWEX extends Rater {
                 if (cnt.DEVELOP_USE) {
                     setRate(1105L, 1108L, this.courseName, price);
                 } else {
-                    setRate(12L, 92L, this.courseName, price);
+                    setRate(12L, 95L, this.courseName, price);
                 }
             }
 
